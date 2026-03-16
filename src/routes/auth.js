@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken"
 import { supabase } from "../supabase.js";
 const router = express.Router()
 
+// Rutas de autenticación y gestión de usuarios
 router.get("/usuarios", async (req, res) => {
     const { data: usuarios, error } = await supabase
         .from("usuarios")
@@ -15,6 +16,7 @@ router.get("/usuarios", async (req, res) => {
     res.json(usuarios)
 })
 
+// Ruta de login
 router.post("/login", async (req, res) => {
     const { usuario, contrasenia } = req.body
 
@@ -68,7 +70,7 @@ router.post("/login", async (req, res) => {
 
 })
 
-
+// Ruta para crear un nuevo usuario
 router.post("/usuarios", async (req, res) => {
     const { nombre_usuario, contrasenia, rol_id, depto_id } = req.body
 
@@ -103,6 +105,7 @@ router.post("/usuarios", async (req, res) => {
     res.status(201).json({ nuevoUSuario, message: "Usuario creado exitosamente" })
 })
 
+// Ruta para actualizar un usuario existente
 router.put("/usuarios/:id", async (req, res) => {
     const { id } = req.params
     const { nombre_usuario, contrasenia, rol_id, depto_id, activo } = req.body
