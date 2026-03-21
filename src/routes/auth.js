@@ -8,11 +8,12 @@ const router = express.Router()
 router.get("/usuarios", async (req, res) => {
     const { data: usuarios, error } = await supabase
         .from("usuarios")
-        .select("id, nombre_usuario, rol_id, depto_id, activo")
+        .select("id, nombre_usuario, rol_id, depto_id, activo, created_at, roles(nombre), departamento(nombre_depto)")
         .order("created_at", { ascending: false })
     if (error) {
         return res.status(500).json({ error: "Error al obtener usuarios" })
     }
+    console.log(usuarios)
     res.json(usuarios)
 })
 
