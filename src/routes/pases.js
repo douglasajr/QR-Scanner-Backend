@@ -8,19 +8,20 @@ const router = express.Router()
 router.get("/pases", async (req, res) => {
     const { data: pases, error } = await supabase
         .from("pases")
-        .select("*")
+        .select("*, tipo_pase(id, nombre_pase)")
+        .order("created_at", { ascending: false })
 
     if (error) {
         console.log('error', error)
         return res.status(500).json({ error: "Error al obtener pases" })
     }
-    return res.status(200).json({ pases })
+    return res.status(200).json( pases )
 })
 
 router.post("/pases", async (req, res) => {
-    const { tipo_pase_id, nombre_visitante, apellido_visitante, telefono, motivo, duracion, duracion_unidad, creado_por } = req.body
-
-    if (!nombre_visitante || !apellido_visitante || !tipo_pase_id || !telefono || !motivo || !duracion || !duracion_unidad || !creado_por) {
+    const { tipo_pase_id, nombre_visitante, apellido_visitante, telefono, motivo, duracion, duracion_unidad, creado_por, dni } = req.body
+    console.log('datos recibidos:', req.body) // Agrega este log para verificar los datos recibidos
+    if (!nombre_visitante || !apellido_visitante || !tipo_pase_id || !telefono || !motivo || !duracion || !duracion_unidad || !creado_por || !dni) {
         return res.status(400).json({ error: "Todos los campos son requeridos" })
     }
 
@@ -35,6 +36,7 @@ router.post("/pases", async (req, res) => {
             creado_por,
             duracion,
             duracion_unidad,
+            dni,
         })
         .select("*")
         .single()

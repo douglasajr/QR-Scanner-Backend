@@ -6,14 +6,14 @@ import cors from 'cors'
 dotenv.config();
 
 const app = express()
+app.use(cors({ origin: 'http://localhost:5173' }))
 app.use(express.json())
-app.use(cors())
 app.get("/", (req, res) => {
     res.send("Hello World!");
 })
 
 app.use("/auth", authRoutes)
-app.use("/", pasesRoutes)
+app.use("/qr", pasesRoutes)
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
