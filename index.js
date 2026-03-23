@@ -1,23 +1,19 @@
 import express from "express";
 import dotenv from "dotenv";
 import authRoutes from "./src/routes/auth.js";
-import cors from "cors" 
+import pasesRoutes from "./src/routes/pases.js";
+import cors from 'cors'
 dotenv.config();
 
 const app = express()
+app.use(cors({ origin: 'http://localhost:5173' }))
 app.use(express.json())
-app.use(cors({
-  origin: 'http://localhost:5173'
-}))
-
 app.get("/", (req, res) => {
     res.send("Hello World!");
 })
 
-app.use("/", authRoutes)
-app.use("/usuarios", authRoutes)
-
-
+app.use("/auth", authRoutes)
+app.use("/", pasesRoutes)
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
