@@ -37,13 +37,13 @@ router.post("/login", async (req, res) => {
     console.log("error:", error)
 
     if (error || !user) {
-        return res.status(401).json({ error: "Usuario no encontrado o inactivo" })
+        return res.status(401).json({ message: "Usuario no encontrado o inactivo" })
     }
 
     const isPasswordValid = await bcrypt.compare(contrasenia, user.contrasenia)
 
     if (!isPasswordValid) {
-        return res.status(401).json({ error: "Contraseña incorrecta" })
+        return res.status(401).json({ message: "Contraseña incorrecta" })
     }
 
     const token = jwt.sign(

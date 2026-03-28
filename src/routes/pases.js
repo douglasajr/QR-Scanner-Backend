@@ -8,13 +8,14 @@ const router = express.Router()
 router.get("/pases", async (req, res) => {
     const { data: pases, error } = await supabase
         .from("pases")
-        .select("*, tipo_pase(id,nombre_pase)")
+        .select("*, tipo_pase(id,nombre_pase), usuarios(nombre_usuario)")
+        .single()
 
     if (error) {
         console.log('error', error)
         return res.status(500).json({ error: "Error al obtener pases" })
     }
-    return res.status(200).json( pases )
+    return res.status(200).json(pases)
 })
 
 router.post("/pases", async (req, res) => {
@@ -65,7 +66,7 @@ router.get("/pases/:id", async (req, res) => {
     if (!pase) {
         return res.status(404).json({ error: "Pase no encontrado" })
     }
-    return res.status(200).json({ pase })
+    return res.status(200).json(pase)
 })
 
 router.patch("/pases/:id", async (req, res) => {

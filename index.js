@@ -2,6 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import authRoutes from "./src/routes/auth.js";
 import pasesRoutes from "./src/routes/pases.js";
+import registrosRoutes from "./src/routes/registros.js";
+import locationRoutes from "./src/routes/location.js";
 import cors from 'cors'
 dotenv.config();
 
@@ -14,6 +16,8 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRoutes)
 app.use("/", pasesRoutes)
+app.use("/", registrosRoutes)
+app.use("/", locationRoutes)
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
