@@ -13,6 +13,7 @@ router.get("/usuarios", async (req, res) => {
     if (error) {
         return res.status(500).json({ error: "Error al obtener usuarios" })
     }
+    console.log(usuarios)
     res.json(usuarios)
 })
 

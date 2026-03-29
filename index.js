@@ -13,7 +13,7 @@ app.get("/", (req, res) => {
 })
 
 app.use("/auth", authRoutes)
-app.use("/qr", pasesRoutes)
+app.use("/", pasesRoutes)
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

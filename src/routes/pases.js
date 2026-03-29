@@ -54,7 +54,7 @@ router.get("/pases/:id", async (req, res) => {
 
     const { data: pase, error } = await supabase
         .from("pases")
-        .select("*")
+        .select("*, tipo_pase(id, nombre_pase)")
         .eq("id", id)
         .single()
 
@@ -65,7 +65,7 @@ router.get("/pases/:id", async (req, res) => {
     if (!pase) {
         return res.status(404).json({ error: "Pase no encontrado" })
     }
-    return res.status(200).json({ pase })
+    return res.status(200).json( pase )
 })
 
 router.patch("/pases/:id", async (req, res) => {
