@@ -8,7 +8,7 @@ const router = express.Router()
 router.get("/usuarios", async (req, res) => {
     const { data: usuarios, error } = await supabase
         .from("usuarios")
-        .select("id, nombre_usuario, rol_id, depto_id, activo, roles(nombre)")
+        .select("id, nombre_usuario, rol_id, depto_id, activo, created_at, roles(nombre), departamento(nombre_depto)")
         .order("created_at", { ascending: false })
     if (error) {
         return res.status(500).json({ error: "Error al obtener usuarios" })
@@ -37,13 +37,13 @@ router.post("/login", async (req, res) => {
     console.log("error:", error)
 
     if (error || !user) {
-        return res.status(401).json({ error: "Usuario no encontrado o inactivo" })
+        return res.status(401).json({ message: "Usuario no encontrado o inactivo" })
     }
 
     const isPasswordValid = await bcrypt.compare(contrasenia, user.contrasenia)
 
     if (!isPasswordValid) {
-        return res.status(401).json({ error: "Contraseña incorrecta" })
+        return res.status(401).json({ message: "Contraseña incorrecta" })
     }
 
     const token = jwt.sign(
@@ -81,7 +81,7 @@ router.post("/usuarios", async (req, res) => {
 
     const hashsedPassword = await bcrypt.hash(contrasenia, 10)
 
-    const { data: nuevoUSuario, error } = await supabase
+    const { data: nuevoUsuario, error } = await supabase
         .from("usuarios")
         .insert({
             nombre_usuario,
@@ -101,9 +101,9 @@ router.post("/usuarios", async (req, res) => {
         return res.status(500).json({ error: "Error al crear usuario" })
     }
 
-    console.log("Nuevo usuario creado:", nuevoUSuario)
+    console.log("Nuevo usuario creado:", nuevoUsuario)
 
-    res.status(201).json({ nuevoUSuario, message: "Usuario creado exitosamente" })
+    res.status(201).json({ nuevoUsuario, message: "Usuario creado exitosamente" })
 })
 
 // Ruta para actualizar un usuario existente
