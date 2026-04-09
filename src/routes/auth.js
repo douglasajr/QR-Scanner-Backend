@@ -13,7 +13,6 @@ router.get("/usuarios", async (req, res) => {
     if (error) {
         return res.status(500).json({ error: "Error al obtener usuarios" })
     }
-    console.log(usuarios)
     res.json(usuarios)
 })
 
@@ -57,13 +56,17 @@ router.post("/login", async (req, res) => {
         { expiresIn: "8h" }
     )
 
+    console.log(user.roles.nombre)
+
     res.json({
         token,
         user: {
             id: user.id,
             nombre_usuario: user.nombre_usuario,
             rol_id: user.rol_id,
-            depto_id: user.depto_id
+            depto_id: user.depto_id,
+            rol: user.roles.nombre,
+            departamento: user.departamento.nombre_depto
         },
         message: "Login exitoso"
     })
