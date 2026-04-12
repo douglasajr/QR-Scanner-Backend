@@ -3,8 +3,30 @@ import { supabase } from "../supabase.js";
 
 const router = express.Router()
 
+router.get("/pases/stats", async (req, res) => {
+    const { data: pases, error } = await supabase
+        .from("pases")
+        .select("id, status")
+
+    if (error) {
+        console.log('error', error)
+        return res.status(500).json({ error: "Error al obtener estadísticas" })
+    }
+
+    const totalPases = pases.length
+    const pasesActivos = pases.filter(pase => pase.status === true).length
+    const pasesVencidos = pases.filter(pase => pase.status === false).length
+
+    return res.status(200).json({
+        totalPases,
+        pasesActivos,
+        pasesVencidos
+    })
+})
+
+
 router.get("/pases", async (req, res) => {
-   
+
     const { data: pases, error } = await supabase
         .from("pases")
         .select("*, tipo_pase(id,nombre_pase), usuarios(nombre_usuario)")
@@ -18,8 +40,8 @@ router.get("/pases", async (req, res) => {
     // Filtro para los pases que necesitan ser actualizados a vencidos
     const ahora = new Date();
 
-    const pasesAActualizar = pases.filter(pase => 
-        pase.status === true && 
+    const pasesAActualizar = pases.filter(pase =>
+        pase.status === true &&
         (pase.fecha_validez === null || new Date(pase.fecha_validez) < ahora)
     );
 
@@ -126,11 +148,13 @@ router.patch("/pases/:id", async (req, res) => {
 
 
 const calcularFechaValidez = (cantidad, unidad) => {
-  const now = new Date()
-  const dias = unidad === 'semanas' ? cantidad * 7 : cantidad
-  now.setDate(now.getDate() + dias)
-  return now.toISOString()
+    const now = new Date()
+    const dias = unidad === 'semanas' ? cantidad * 7 : cantidad
+    now.setDate(now.getDate() + dias)
+    return now.toISOString()
 }
+
+
 
 
 export default router

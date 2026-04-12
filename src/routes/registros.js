@@ -3,11 +3,34 @@ import { supabase } from "../supabase.js";
 
 const router = express.Router()
 
+router.get("/registros/stats", async (req, res) => {
+    const { data: registros, error } = await supabase
+        .from("registros")
+        .select("*")
+
+    if (error) {
+        console.log({ error });
+        return res.status(500).json({ error: "Error al obtener estadísticas" })
+    }
+
+    const totalRegistros = registros.length
+    const registrosEntrada = registros.filter(registro => registro.tipo === "entrada").length
+    const registrosSalida = registros.filter(registro => registro.tipo === "salida").length
+
+    console.log({ totalRegistros, registrosEntrada, registrosSalida })
+
+    return res.json({
+        totalRegistros,
+        registrosEntrada,
+        registrosSalida
+    })
+})
+
 router.get("/registros", async (req, res) => {
     const { data: registro, error } = await supabase
         .from('registros')
         .select('*, pases(nombre_visitante, apellido_visitante, telefono, motivo, dni, codigo), usuarios(nombre_usuario), location(nombre_location)')
-        
+
 
     if (error) {
         console.log({ error });
